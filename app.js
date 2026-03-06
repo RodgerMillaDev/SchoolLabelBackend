@@ -11,10 +11,9 @@ const {
   serverTimestamp,
   firebaseAuth,
 } = require(process.env.FIREBASE_SERVICE_ACCOUNT);
-
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 
 const port = process.env.PORT;
 const adminUIDS = [process.env.adminOne];
@@ -31,8 +30,8 @@ adminUIDS.forEach((uid) => {
 });
 
 
-app.post("/Aloo", (req,res)=>{
-    res.json("Yess i am awake")
+app.post("/Aloo", (req, res) => {
+  res.json("Yess i am awake")
 })
 
 app.get("/", (req, res) => {
@@ -43,59 +42,59 @@ app.listen(port, () => {
   console.log("Hello Ras, tuko on!")
 })
 
-app.post('/payNow',(req,res)=>{
-    const {uid,payEmail,name}=req.body
-  
+app.post('/payNow', (req, res) => {
+  const { uid, payEmail, name } = req.body
 
-    const params = JSON.stringify({
-      "email": payEmail,
-      "amount": 1 * 100,
+
+  const params = JSON.stringify({
+    "email": payEmail,
+    "amount": 1 * 100,
     "currency": "KES",
-    "channels":["mobile_money"],
-      "callback_url":`http://localhost:3000/confirmpayment`
-    })
-    
-    const options = {
-      hostname: 'api.paystack.co',
+    "channels": ["mobile_money"],
+    "callback_url": `http://localhost:3000/confirmpayment`
+  })
 
-      port: 443,
-      path: '/transaction/initialize',
-      method: 'POST',
-      headers: {
-        // Authorization: `Bearer ${process.env.PP_LIVE_SECRETKEY}`,
-        Authorization: `Bearer ${process.env.PP_TEST_SECRETKEY}`,
-        'Content-Type': 'application/json'
-      }
+  const options = {
+    hostname: 'api.paystack.co',
+
+    port: 443,
+    path: '/transaction/initialize',
+    method: 'POST',
+    headers: {
+      // Authorization: `Bearer ${process.env.PP_LIVE_SECRETKEY}`,
+      Authorization: `Bearer ${process.env.PP_TEST_SECRETKEY}`,
+      'Content-Type': 'application/json'
     }
-    
-    const payStackreq = https.request(options, payStackres => {
-      let data = ''
-    
-      payStackres.on('data', (chunk) => {
-        data += chunk
-      });
-    
-      payStackres.on('end', () => {
-        try {
-            const paySatckrespData=JSON.parse(data)
-            console.log(paySatckrespData)
-            res.json(paySatckrespData)
+  }
 
-        } catch (error) {
-            console.log(error)
-        }
+  const payStackreq = https.request(options, payStackres => {
+    let data = ''
 
-      })
+    payStackres.on('data', (chunk) => {
+      data += chunk
+    });
 
-    }).on('error', error => {
-      console.error(error)
-      res.status(500).json({ error: 'Request failed' });
+    payStackres.on('end', () => {
+      try {
+        const paySatckrespData = JSON.parse(data)
+        console.log(paySatckrespData)
+        res.json(paySatckrespData)
+
+      } catch (error) {
+        console.log(error)
+      }
 
     })
-    
-    payStackreq.write(params)
 
-    payStackreq.end()
+  }).on('error', error => {
+    console.error(error)
+    res.status(500).json({ error: 'Request failed' });
+
+  })
+
+  payStackreq.write(params)
+
+  payStackreq.end()
 
 })
 
