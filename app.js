@@ -29,7 +29,6 @@ adminUIDS.forEach((uid) => {
     });
 });
 
-
 app.post("/Aloo", (req, res) => {
   res.json("Yess i am awake")
 })
@@ -141,7 +140,6 @@ app.post("/paystack-webhook", express.json({ type: "*/*" }), async (req, res) =>
   }
 });
 
-
 app.post("/trxnStatus", async (req, res) => {
   const { refCode, userId } = req.body;
 
@@ -172,17 +170,43 @@ app.post("/trxnStatus", async (req, res) => {
         const email = paystackRespData.data.customer.email;
 
         if (status === "success") {
-          await firestore.collection("transactions").doc(refCode).set({
-            reference: refCode,
+
+          // 1️⃣ Get user document
+          const userRef = firestore.collection("users").doc(userId);
+          const userSnap = await userRef.get();
+
+          if (!userSnap.exists) {
+            return res.status(404).json({ error: "User not found" });
+          }
+
+          const userData = userSnap.data();
+          const cartItems = userData.cartItems || [];
+          const userName = userData.userName || "";
+
+          // 2️⃣ Save order
+          await firestore.collection("orders").doc(refCode).set({
+            transactionId: refCode,
+            userId,
+            userName,
             email,
             amount,
+            cartItems,
             status,
-            userId,
-            verifiedAt: serverTimestamp(),
+            createdAt: serverTimestamp(),
+          });
+
+          await firestore.collection("stats").doc("earnings").update({
+  totalRevenue: admin.firestore.FieldValue.increment(totalCost)
+});
+
+          // 3️⃣ Clear cart
+          await userRef.update({
+            cartItems: []
           });
         }
 
         res.json(paystackRespData);
+
       } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Verification failed" });
