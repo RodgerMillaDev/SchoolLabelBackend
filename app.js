@@ -172,7 +172,7 @@ app.post("/trxnStatus", async (req, res) => {
         if (status === "success") {
 
           // 1️⃣ Get user document
-          const userRef = firestore.collection("users").doc(userId);
+          const userRef = firestore.collection("Users").doc(userId);
           const userSnap = await userRef.get();
 
           if (!userSnap.exists) {
