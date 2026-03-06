@@ -170,43 +170,17 @@ app.post("/trxnStatus", async (req, res) => {
         const email = paystackRespData.data.customer.email;
 
         if (status === "success") {
-
-          // 1️⃣ Get user document
-          const userRef = firestore.collection("Users").doc(userId);
-          const userSnap = await userRef.get();
-
-          if (!userSnap.exists) {
-            return res.status(404).json({ error: "User not found" });
-          }
-
-          const userData = userSnap.data();
-          const cartItems = userData.cartItems || [];
-          const userName = userData.userName || "";
-
-          // 2️⃣ Save order
-          await firestore.collection("orders").doc(refCode).set({
-            transactionId: refCode,
-            userId,
-            userName,
+          await firestore.collection("transactions").doc(refCode).set({
+            reference: refCode,
             email,
             amount,
-            cartItems,
             status,
-            createdAt: serverTimestamp(),
-          });
-
-          await firestore.collection("stats").doc("earnings").update({
-  totalRevenue: admin.firestore.FieldValue.increment(totalCost)
-});
-
-          // 3️⃣ Clear cart
-          await userRef.update({
-            cartItems: []
+            userId,
+            verifiedAt: serverTimestamp(),
           });
         }
 
         res.json(paystackRespData);
-
       } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Verification failed" });
