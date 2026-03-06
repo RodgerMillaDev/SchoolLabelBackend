@@ -17,9 +17,7 @@ app.use(express.json());
 app.use(cors());
 
 const port = process.env.PORT;
-
 const adminUIDS = [process.env.adminOne];
-
 adminUIDS.forEach((uid) => {
   admin
     .auth()
@@ -44,7 +42,6 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log("Hello Ras, tuko on!")
 })
-
 
 app.post('/payNow',(req,res)=>{
     const {uid,payEmail,name}=req.body
@@ -101,8 +98,6 @@ app.post('/payNow',(req,res)=>{
     payStackreq.end()
 
 })
-
-
 
 app.post("/paystack-webhook", express.json({ type: "*/*" }), async (req, res) => {
   try {
