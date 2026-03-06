@@ -10,7 +10,7 @@ const {
   firestore,
   serverTimestamp,
   firebaseAuth,
-} = require("./firebaseService");
+} = require(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 const app = express();
 app.use(express.json());
