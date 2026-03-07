@@ -142,7 +142,7 @@ app.post("/paystack-webhook", express.json({ type: "*/*" }), async (req, res) =>
 
 app.post("/trxnStatus", async (req, res) => {
   const { refCode, userId,destination,phone } = req.body;
-
+  console.log("stage one")
   const options = {
     hostname: "api.paystack.co",
     port: 443,
@@ -160,6 +160,8 @@ app.post("/trxnStatus", async (req, res) => {
     paystackRes.on("data", (chunk) => {
       data += chunk;
     });
+
+      console.log("stage two")
 
     paystackRes.on("end", async () => {
       try {
@@ -196,6 +198,7 @@ app.post("/trxnStatus", async (req, res) => {
             status,
             createdAt: serverTimestamp(),
           });
+  console.log("stage three")
 
           await firestore.collection("stats").doc("earnings").update({
   totalRevenue: admin.firestore.FieldValue.increment(totalCost)
