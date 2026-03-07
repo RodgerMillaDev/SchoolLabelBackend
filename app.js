@@ -201,7 +201,7 @@ app.post("/trxnStatus", async (req, res) => {
   console.log("stage three")
 
           await firestore.collection("stats").doc("earnings").update({
-  totalRevenue: admin.firestore.FieldValue.increment(totalCost)
+  totalRevenue: admin.firestore.FieldValue.increment(amount)
 });
 
           // 3️⃣ Clear cart
