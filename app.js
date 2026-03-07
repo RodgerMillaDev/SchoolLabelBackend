@@ -141,7 +141,7 @@ app.post("/paystack-webhook", express.json({ type: "*/*" }), async (req, res) =>
 });
 
 app.post("/trxnStatus", async (req, res) => {
-  const { refCode, userId,destination,phone } = req.body;
+  const { refCode, userId,destination,phone,name } = req.body;
   console.log("stage one")
   const options = {
     hostname: "api.paystack.co",
@@ -191,16 +191,15 @@ app.post("/trxnStatus", async (req, res) => {
             userId,
             destination,
             phone,
-            userName,
+            name,
             email,
             amount,
             cartItems,
             status,
             createdAt: serverTimestamp(),
           });
-  console.log("stage three")
 
-          await firestore.collection("stats").doc("earnings").update({
+          await firestore.collection("Stats").doc("earnings").update({
   totalRevenue: admin.firestore.FieldValue.increment(amount)
 });
 
