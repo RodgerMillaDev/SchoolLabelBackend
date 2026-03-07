@@ -218,7 +218,7 @@ const month = months[now.getMonth()];
 
 await firestore
   .collection("Stats")
-  .doc("monthlySales")
+  .doc("Sales")
   .collection("years")
   .doc(year)
   .set(
