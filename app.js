@@ -141,7 +141,7 @@ app.post("/paystack-webhook", express.json({ type: "*/*" }), async (req, res) =>
 });
 
 app.post("/trxnStatus", async (req, res) => {
-  const { refCode, userId,destination,phone,name } = req.body;
+  const { refCode, userId,destination,phone,name,date } = req.body;
   console.log("stage one")
   const options = {
     hostname: "api.paystack.co",
@@ -191,6 +191,7 @@ app.post("/trxnStatus", async (req, res) => {
             userId,
             destination,
             phone,
+            date,
             name,
             email,
             amount,
