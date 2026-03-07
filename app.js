@@ -204,6 +204,30 @@ app.post("/trxnStatus", async (req, res) => {
   totalRevenue: admin.firestore.FieldValue.increment(amount)
 });
 
+
+
+const now = new Date();
+const year = now.getFullYear().toString();
+
+const months = [
+  "Jan","Feb","Mar","Apr","May","Jun",
+  "Jul","Aug","Sep","Oct","Nov","Dec"
+];
+
+const month = months[now.getMonth()];
+
+await firestore
+  .collection("Stats")
+  .doc("monthlySales")
+  .collection("years")
+  .doc(year)
+  .set(
+    {
+      [month]: admin.firestore.FieldValue.increment(amount)
+    },
+    { merge: true }
+  );
+
           // 3️⃣ Clear cart
           await userRef.update({
             cartItems: []
