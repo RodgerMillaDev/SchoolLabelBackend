@@ -313,6 +313,37 @@ Your purchase from School Labels Kenya was successful. We’ve received your ord
     console.log(error)
   }
 })
+app.post("/sendSMSClearOrder",async (req,res)=>{
+  const {fon,name}=req.body
+  try {
+    const message=
+`
+Hello ${name},
+
+Your order has left our dispatch center and is on the way to your destination. Thank you for your patience.
+`
+
+    const url = "https://sms.textsms.co.ke/api/services/sendsms"
+    const response = await fetch(url,{
+      method:"POST",
+      headers:{
+        'Content-type':'application/json'
+      },
+      body:JSON.stringify({
+        "apikey":process.env.SMS_APIKEY,
+        "partnerID":process.env.SMS_PARTNERID,
+        "message":message,
+        "shortcode":process.env.SMS_SHORTCODE,
+        "mobile":fon
+      })
+    })
+    const result =await response.json()
+    console.log(result)
+    res.send(result)
+  } catch (error) {
+    console.log(error)
+  }
+})
 app.post("/smsBalance", async (req,res)=>{
   try {
     const url="https://sms.textsms.co.ke/api/services/getbalance";
