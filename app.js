@@ -42,12 +42,12 @@ app.listen(port, () => {
 })
 
 app.post('/payNow', (req, res) => {
-  const { uid, payEmail, name } = req.body
+  const { uid, payEmail, name,grandTotal } = req.body
 
 
   const params = JSON.stringify({
     "email": payEmail,
-    "amount": 1 * 100,
+    "amount": parseInt(grandTotal) * 100,
     "currency": "KES",
     "channels": ["mobile_money"],
     "callback_url": `http://localhost:3000/confirmpayment`
@@ -289,8 +289,7 @@ app.post("/sendSMStoClient",async (req,res)=>{
 `
 Hello ${name},
 
-Your purchase from School Labels Kenya was successful. We’ve received your order and will start processing it shortly.
-`
+Your purchase from School Labels Kenya was successful. We have received your order and will start processing it shortly. Deliveries are dispatched every Tuesday and Friday.`
 
     const url = "https://sms.textsms.co.ke/api/services/sendsms"
     const response = await fetch(url,{
