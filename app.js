@@ -47,7 +47,8 @@ app.post('/payNow', (req, res) => {
 
   const params = JSON.stringify({
     "email": payEmail,
-    "amount": parseInt(grandTotal) * 100,
+    // "amount": parseInt(grandTotal) * 100,
+    "amount": 1 * 100,
     "currency": "KES",
     "channels": ["mobile_money"],
     "callback_url": `https://school-labels-kenya.web.app/confirmpayment`
