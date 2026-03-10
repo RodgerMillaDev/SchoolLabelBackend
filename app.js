@@ -42,7 +42,7 @@ app.listen(port, () => {
 })
 
 app.post('/payNow', (req, res) => {
-  const { uid, payEmail, name,grandTotal } = req.body
+  const { uid, payEmail, name,grandTotal,delText } = req.body
 
 
   const params = JSON.stringify({
@@ -141,7 +141,7 @@ app.post("/paystack-webhook", express.json({ type: "*/*" }), async (req, res) =>
 });
 
 app.post("/trxnStatus", async (req, res) => {
-  const { refCode, userId,destination,phone,name,date } = req.body;
+  const { refCode, userId,destination,phone,name,date,delText } = req.body;
   console.log("stage one")
   const options = {
     hostname: "api.paystack.co",
@@ -190,6 +190,7 @@ app.post("/trxnStatus", async (req, res) => {
             transactionId: refCode,
             userId,
             destination,
+            delText,
             phone,
             date,
             name,
