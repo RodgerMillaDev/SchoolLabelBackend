@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors({ origin: "*" }));
 
 const port = process.env.PORT;
-const adminUIDS = [process.env.adminOne,process.env.adminTwo];
+const adminUIDS = [process.env.adminOne,process.env.adminTwo,process.env.adminThree];
 adminUIDS.forEach((uid) => {
   admin
     .auth()
