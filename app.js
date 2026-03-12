@@ -284,6 +284,14 @@ A new order has been placed by ${CustomerName}. Check the dashboard to process i
     console.log(error)
   }
 })
+function toKenyanFormat(fon) {
+  if (phone.length === 10 && phone.startsWith("0")) {
+    return "254" + phone.slice(1);
+  }
+  throw new Error("Invalid phone number");
+}
+
+
 app.post("/sendSMStoClient",async (req,res)=>{
   const {fon,name}=req.body
   try {
@@ -304,7 +312,7 @@ Your purchase from School Labels Kenya was successful. We have received your ord
         "partnerID":process.env.SMS_PARTNERID,
         "message":message,
         "shortcode":process.env.SMS_SHORTCODE,
-        "mobile":fon
+        "mobile":toKenyanFormat(fon)
       })
     })
     const result =await response.json()
