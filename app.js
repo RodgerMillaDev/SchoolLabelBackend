@@ -167,7 +167,6 @@ app.post("/trxnStatus", async (req, res) => {
     paystackRes.on("end", async () => {
       try {
         const paystackRespData = JSON.parse(data);
-
         const status = paystackRespData.data.status;
         const amount = paystackRespData.data.amount / 100;
         const email = paystackRespData.data.customer.email;
@@ -183,8 +182,8 @@ app.post("/trxnStatus", async (req, res) => {
           }
 
           const userData = userSnap.data();
-          const cartItems = userData.cartItems || [];
-          const userName = userData.userName || "";
+          const cartItems = userData.cartItems ;
+          const userName = userData.name;
 
           // 2️⃣ Save order
           await firestore.collection("Orders").doc(refCode).set({
@@ -194,7 +193,7 @@ app.post("/trxnStatus", async (req, res) => {
             delText,
             phone,
             date,
-            name,
+            userName,
             email,
             amount,
             cartItems,
@@ -203,8 +202,8 @@ app.post("/trxnStatus", async (req, res) => {
           });
 
           await firestore.collection("Stats").doc("earnings").update({
-  totalRevenue: admin.firestore.FieldValue.increment(amount)
-});
+            totalRevenue: admin.firestore.FieldValue.increment(amount)
+          });
 
 
 
