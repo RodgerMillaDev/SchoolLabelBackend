@@ -93,9 +93,7 @@ app.post('/payNow', (req, res) => {
   })
 
   payStackreq.write(params)
-
   payStackreq.end()
-
 })
 
 app.post("/paystack-webhook", express.json({ type: "*/*" }), async (req, res) => {
@@ -154,37 +152,28 @@ app.post("/trxnStatus", async (req, res) => {
       "Content-Type": "application/json",
     },
   };
-
   const request = https.request(options, (paystackRes) => {
     let data = "";
-
     paystackRes.on("data", (chunk) => {
       data += chunk;
     });
-
       console.log("stage two")
-
-    paystackRes.on("end", async () => {
+      paystackRes.on("end", async () => {
       try {
         const paystackRespData = JSON.parse(data);
         const status = paystackRespData.data.status;
         const amount = paystackRespData.data.amount / 100;
         const email = paystackRespData.data.customer.email;
-
         if (status === "success") {
-
           // 1️⃣ Get user document
           const userRef = firestore.collection("Users").doc(userId);
           const userSnap = await userRef.get();
-
           if (!userSnap.exists) {
             return res.status(404).json({ error: "User not found" });
           }
-
           const userData = userSnap.data();
           const cartItems = userData.cartItems ;
           const userName = userData.name;
-
           // 2️⃣ Save order
           await firestore.collection("Orders").doc(refCode).set({
             transactionId: refCode,
@@ -234,7 +223,6 @@ await firestore
             cartItems: []
           });
         }
-
         res.json(paystackRespData);
 
       } catch (error) {
