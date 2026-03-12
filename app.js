@@ -285,8 +285,8 @@ A new order has been placed by ${CustomerName}. Check the dashboard to process i
   }
 })
 function toKenyanFormat(fon) {
-  if (phone.length === 10 && phone.startsWith("0")) {
-    return "254" + phone.slice(1);
+  if (fon.length === 10 && fon.startsWith("0")) {
+    return "254" + fon.slice(1);
   }
   throw new Error("Invalid phone number");
 }
