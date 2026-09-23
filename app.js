@@ -118,7 +118,7 @@ app.post("/payNow", (req, res) => {
     });
   }
 
-  const amount = Math.round(Number(grandTotal) * 100);
+  // const amount = Math.round(Number(grandTotal) * 100);
   const amount = 1 * 100;
 
   const params = JSON.stringify({
