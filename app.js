@@ -72,7 +72,6 @@ app.post("/paystack-webhook", express.json({ type: "*/*" }), async (req, res) =>
 
       const reference = data.reference;
       const amount = data.amount / 100;
-      const amount = 1 / 100;
       const status = data.status;
       const email = data.customer?.email || "";
 
